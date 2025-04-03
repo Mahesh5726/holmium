@@ -119,8 +119,12 @@ jobs:
               --ingress external \
               --target-port ${{ env.TARGET_PORT }} \
               --image nginx  \
-              --system-assigned-identity true
+              --system-assigned true\
+              --output json
           fi
+
+      - name: Wait for Container App Identity Assignment
+        run: sleep 20
 
       - name: Assign AcrPull to Container App's managed identity
         run: |
@@ -129,6 +133,14 @@ jobs:
             --name ${{ env.CONTAINER_APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query identity.principalId --output tsv)
+          
+          echo "PRINCIPAL_ID: $PRINCIPAL_ID"
+
+          if [ -z "$PRINCIPAL_ID" ]; then
+            echo "Error: PRINCIPAL_ID is empty! Exiting..."
+            exit 1
+          fi
+
           az role assignment create \
             --assignee "$PRINCIPAL_ID" \
             --role "AcrPull" \
