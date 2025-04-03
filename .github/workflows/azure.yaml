@@ -119,7 +119,7 @@ jobs:
               --ingress external \
               --target-port ${{ env.TARGET_PORT }} \
               --image nginx  \
-              --system-assigned-identity true \
+              --system-assigned-identity \
               --output json
           fi
 
