@@ -137,7 +137,7 @@ jobs:
           tags: ${{ env.ACR_REGISTRY }}/${{ env.ACR_REPOSITORY_NAME }}:${{ github.ref_name }}
 
       # CONTAINER APP DEPLOY
-      - name: Crate/update Container App
+      - name: Create/update Container App
         run: |
           az containerapp up \
             --name "${{ env.CONTAINER_APP_NAME }}" \
